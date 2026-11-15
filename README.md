@@ -13,9 +13,9 @@ O texto cifrado é retornado como uma sequência de bits, com **8 bits por byte*
 
 ## Como funciona
 
-Cada byte do texto claro é combinado com um byte da chave usando a operação XOR:
+Cada byte do texto claro é combinado com um byte da chave usando a operação XOR (`^`). A chave deve ter exatamente o mesmo tamanho do texto, em bytes, e é usada uma única vez, sem repetição.
 
-Exemplo pratico:
+Exemplo prático:
 
 ```text
 textoClaro:  "OLA"
@@ -23,9 +23,17 @@ chave:       "CHT"
 textoCifrado: "000011000000010000010101"
 ```
 
-Caso a chave seja menor que o texto, ela é reutilizada ciclicamente. Recomenda-se usar uma chave com o mesmo tamanho do texto.
+O processo é simétrico: aplicar a mesma chave e o mesmo XOR sobre o texto cifrado recupera o texto original.
 
-## Requisitos
+## Tecnologias
+
+- Node.js 18+
+- TypeScript
+- Express
+- Swagger UI Express + YAML (documentação OpenAPI)
+- `node:test` com `tsx` (testes automatizados)
+
+## Pré-requisitos
 
 - Node.js 18 ou superior
 - npm
@@ -51,19 +59,6 @@ A API ficará disponível em `http://localhost:3000`.
 ### Documentação (Swagger)
 
 Com a API rodando, acesse `http://localhost:3000/docs` para abrir a interface do Swagger UI.
-
-### Modo produção
-
-```bash
-npm run build
-npm start
-```
-
-Para usar outra porta, defina a variável de ambiente `PORT`:
-
-O servidor escuta em `0.0.0.0`, permitindo o acesso de outros computadores do laboratório pelo endereço `http://IP-DO-SERVIDOR:3000`.
-
-## Endpoints
 
 ### `POST /cifrar`
 
@@ -112,10 +107,18 @@ Decifra uma mensagem cifrada.
 | Campo | Regra |
 | --- | --- |
 | `textoClaro` | Obrigatório, string não vazia, no máximo 255 caracteres |
-| `chave` | Obrigatório, string não vazia, no máximo 255 caracteres |
-| `textoCifrado` | Obrigatório, apenas `0` e `1`, quantidade de bits múltipla de 8, no máximo 2048 caracteres |
+| `chave` | Obrigatório, string não vazia, no máximo 255 caracteres, mesmo tamanho em bytes do texto |
+| `textoCifrado` | Obrigatório, apenas `0` e `1`, quantidade de bits múltipla de 8, no máximo 2048 bits, mesmo tamanho em bytes do texto decifrado |
 
-O texto é processado em UTF-8. Para mensagens simples em ASCII, cada caractere corresponde a 8 bits.
+O texto é processado em UTF-8. A comparação de tamanho entre mensagem e chave é feita em **bytes**, então caracteres acentuados podem ocupar mais de um byte.
+
+Entradas inválidas retornam HTTP 400 com uma mensagem explicativa:
+
+```json
+{
+  "erro": "A chave deve ter o mesmo tamanho, em bytes, da mensagem"
+}
+```
 
 ## .zip para entrega
 

@@ -30,6 +30,16 @@ function validarCampoString(valor: unknown, campo: string, limite: number): stri
   return null;
 }
 
+function validarTamanhoChave(chave: string, bytesMensagem: number): string | null {
+  const bytesChave = Buffer.byteLength(chave, 'utf8');
+
+  if (bytesChave !== bytesMensagem) {
+    return `A chave deve ter o mesmo tamanho, em bytes, da mensagem (${bytesMensagem} bytes).`;
+  }
+
+  return null;
+}
+
 function validarTextoCifrado(valor: unknown): string | null {
   const erro = validarCampoString(valor, 'textoCifrado', LIMITE_TEXTO_CIFRADO);
 
@@ -79,6 +89,15 @@ export function criarApp() {
       return res.status(400).json({ erro });
     }
 
+    const erroTamanho = validarTamanhoChave(
+      chave as string,
+      Buffer.byteLength(textoClaro as string, 'utf8'),
+    );
+
+    if (erroTamanho) {
+      return res.status(400).json({ erro: erroTamanho });
+    }
+
     return res.json({ textoCifrado: cifrar(textoClaro as string, chave as string) });
   });
 
@@ -90,6 +109,13 @@ export function criarApp() {
 
     if (erro) {
       return res.status(400).json({ erro });
+    }
+
+    const bytesMensagem = (textoCifrado as string).length / BITS_POR_BYTE;
+    const erroTamanho = validarTamanhoChave(chave as string, bytesMensagem);
+
+    if (erroTamanho) {
+      return res.status(400).json({ erro: erroTamanho });
     }
 
     return res.json({ textoClaro: decifrar(textoCifrado as string, chave as string) });

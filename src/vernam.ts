@@ -1,10 +1,16 @@
 const BITS_POR_BYTE = 8;
 
 function aplicarChave(dados: Buffer, chave: Buffer): Buffer {
+  if (chave.length !== dados.length) {
+    throw new Error(
+      `A chave deve ter o mesmo tamanho, em bytes, da mensagem (${dados.length} bytes).`,
+    );
+  }
+
   const resultado = Buffer.alloc(dados.length);
 
   for (let i = 0; i < dados.length; i++) {
-    resultado[i] = dados[i] ^ chave[i % chave.length];
+    resultado[i] = dados[i] ^ chave[i];
   }
 
   return resultado;
