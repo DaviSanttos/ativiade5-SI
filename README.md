@@ -117,33 +117,7 @@ Decifra uma mensagem cifrada.
 
 O texto é processado em UTF-8. Para mensagens simples em ASCII, cada caractere corresponde a 8 bits.
 
-## Estrutura do projeto
-
-```text
-api-cifra-vernam/
-├── docs/
-│   └── openapi.yaml
-├── src/
-│   ├── app.ts          # Configuração das rotas e validações
-│   ├── index.ts        # Inicialização do servidor
-│   ├── vernam.ts       # Implementação da Cifra de Vernam
-│   └── vernam.test.ts  # Testes automatizados
-├── .gitignore
-├── package.json
-├── README.md
-└── tsconfig.json
-```
-
-## Geração do arquivo .zip para entrega
-
-O `.zip` **não deve conter** `node_modules/` nem `dist/` (arquivos compilados/instalados). Na raiz do projeto, execute:
-
-```powershell
-Compress-Archive -Path package.json,package-lock.json,tsconfig.json,.gitignore,README.md,src,docs `
-  -DestinationPath ..\api-cifra-vernam.zip -Force
-```
-
-Também é possível compactar a pasta pelo Explorador de Arquivos, removendo antes as pastas `node_modules` e `dist`.
+## .zip para entrega
 
 Para executar o projeto após descompactar:
 
