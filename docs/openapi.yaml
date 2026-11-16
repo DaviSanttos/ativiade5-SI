@@ -4,6 +4,8 @@ info:
   description: "API para cifrar e decifrar mensagens usando a Cifra de Vernam. Texto cifrado deve ser retornado em binário, com formato de 8 bits."
   version: 1.0.1
 servers:
+  - url: /
+    description: Servidor atual
   - url: http://localhost:3000
     description: Servidor local
 
